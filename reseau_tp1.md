@@ -64,3 +64,40 @@ Interface : 10.33.48.9 --- 0x6
 ```
 
 TP 1 SUITE DUO
+
+🌞 Vérifier à l'aide d'une commande que votre IP a bien été changée
+
+```
+Carte Ethernet Ethernet :
+
+   Suffixe DNS propre à la connexion. . . : home
+   Adresse IPv6 de liaison locale. . . . .: fe80::26fb:37cb:53b0:a838%7
+   Adresse IPv4. . . . . . . . . . . . . .: 10.10.10.2
+   Masque de sous-réseau. . . . . . . . . : 255.255.255.0
+   Passerelle par défaut. . . . . . . . . :
+
+```
+🌞 Vérifier que les deux machines se joignent
+```
+Statistiques Ping pour 10.10.10.1:
+    Paquets : envoyés = 4, reçus = 4, perdus = 0 (perte 0%),
+Durée approximative des boucles en millisecondes :
+    Minimum = 1ms, Maximum = 3ms, Moyenne = 1ms
+```
+
+🌞 Déterminer l'adresse MAC de votre correspondant
+```
+PS C:\Users\vince> arp -a 10.10.10.1
+
+Interface : 10.10.10.2 --- 0x7
+  Adresse Internet      Adresse physique      Type
+  10.10.10.1            22-e0-4c-a1-31-36     dynamique
+```
+  
+🌞 Visualiser la connexion en cours
+```
+PS C:\Users\vince> netstat -a -n -b
+
+  TCP    10.10.10.2:8888        10.10.10.1:51752       ESTABLISHED
+```
+
