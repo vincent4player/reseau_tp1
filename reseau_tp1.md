@@ -102,10 +102,11 @@ PS C:\Users\vince> netstat -a -n -b
 ```
 
 🌞 Pour aller un peu plus loin
+```
 PS C:\Users\vince\OneDrive\Bureau\netcat-1.11> .\nc.exe -l -p 8888 -s 10.10.10.2
 dsqfggs
 qerstr
-
+```
 FIREWALL
 
 🌞 Activez et configurez votre firewall
