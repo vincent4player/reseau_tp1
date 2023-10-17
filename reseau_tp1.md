@@ -101,3 +101,16 @@ PS C:\Users\vince> netstat -a -n -b
   TCP    10.10.10.2:8888        10.10.10.1:51752       ESTABLISHED
 ```
 
+🌞 Pour aller un peu plus loin
+PS C:\Users\vince\OneDrive\Bureau\netcat-1.11> .\nc.exe -l -p 8888 -s 10.10.10.2
+dsqfggs
+qerstr
+
+FIREWALL
+
+🌞 Activez et configurez votre firewall
+
+```
+Parefeu windws>firewall windows defender>parametres avancés>regles de trafic entrant>nouvelle regle>suivant>suivant>cocher ICMPv4>suivant>personaliser>ce programme> cocher "demande d'ECHO et reponse d'echo>suivant..> donner nom a la regle>fin
+```
+
