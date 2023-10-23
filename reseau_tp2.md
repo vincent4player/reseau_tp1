@@ -1,15 +1,4 @@
 I. Setup IP
-Le lab, il vous faut deux machines :
-
-les deux machines doivent être connectées physiquement
-vous devez choisir vous-mêmes les IPs à attribuer sur les interfaces réseau, les contraintes :
-
-IPs privées (évidemment n_n)
-dans un réseau qui peut contenir au moins 1000 adresses IP (il faut donc choisir un masque adapté)
-oui c'est random, on s'exerce c'est tout, p'tit jog en se levant c:
-le masque choisi doit être le plus grand possible (le plus proche de 32 possible) afin que le réseau soit le plus petit possible
-
-
 
 🌞 Mettez en place une configuration réseau fonctionnelle entre les deux machines
 ```
@@ -56,62 +45,59 @@ Durée approximative des boucles en millisecondes :
 🌞 Wireshark it
 
 
-ping ça envoie des paquets de type ICMP (c'est pas de l'IP, c'est un de ses frères)
-
-les paquets ICMP sont encapsulés dans des trames Ethernet, comme les paquets IP
-il existe plusieurs types de paquets ICMP, qui servent à faire des trucs différents
-
-
-
-déterminez, grâce à Wireshark, quel type de paquet ICMP est envoyé par ping
-
-pour le ping que vous envoyez
-et le pong que vous recevez en retour
-
-
-
-
-Vous trouverez sur la page Wikipedia de ICMP un tableau qui répertorie tous les types ICMP et leur utilité
-
 🦈 PCAP qui contient les paquets ICMP qui vous ont permis d'identifier les types ICMP (juste quelques-uns)
 
 II. ARP my bro
-ARP permet, pour rappel, de résoudre la situation suivante :
-
-pour communiquer avec quelqu'un dans un LAN, il FAUT connaître son adresse MAC
-on admet un PC1 et un PC2 dans le même LAN :
-
-PC1 veut joindre PC2
-PC1 et PC2 ont une IP correctement définie
-PC1 a besoin de connaître la MAC de PC2 pour lui envoyer des messages
-dans cette situation, PC1 va utilise le protocole ARP pour connaître la MAC de PC2
-une fois que PC1 connaît la mac de PC2, il l'enregistre dans sa table ARP
-
-
-
 
 🌞 Check the ARP table
+```
+PS C:\Users\vince> arp -a
 
-utilisez une commande pour afficher votre table ARP
-déterminez la MAC de votre binome depuis votre table ARP
-déterminez la MAC de la gateway de votre réseau
+Interface : 10.10.10.2 --- 0x7
 
-celle de votre réseau physique, WiFi, genre YNOV, car il n'y en a pas dans votre ptit LAN
-c'est juste pour vous faire manipuler un peu encore :)
-
-
-
-
-Il peut être utile de ré-effectuer des ping avant d'afficher la table ARP. En effet : les infos stockées dans la table ARP ne sont stockées que temporairement. Ce laps de temps est de l'ordre de ~60 secondes sur la plupart de nos machines.
+  Adresse Internet      Adresse physique      Type
+  10.10.10.1            08-bf-b8-c2-2a-57     dynamique
+  10.10.10.3            ff-ff-ff-ff-ff-ff     statique
+  10.10.10.12           08-bf-b8-c2-2a-57     dynamique
+  224.0.0.22            01-00-5e-00-00-16     statique
+  224.0.0.251           01-00-5e-00-00-fb     statique
+  224.0.0.252           01-00-5e-00-00-fc     statique
+  239.255.255.250       01-00-5e-7f-ff-fa     statique
+```
 
 🌞 Manipuler la table ARP
+```
+PS C:\WINDOWS\system32> arp -d
+La suppression de l'entrée ARP a échoué : Paramètre incorrect.
 
-utilisez une commande pour vider votre table ARP
-prouvez que ça fonctionne en l'affichant et en constatant les changements
-ré-effectuez des pings, et constatez la ré-apparition des données dans la table ARP
+PS C:\WINDOWS\system32> netsh interface ip delete arpcache
+Ok.
 
+PS C:\WINDOWS\system32> arp -a
 
-Les échanges ARP sont effectuées automatiquement par votre machine lorsqu'elle essaie de joindre une machine sur le même LAN qu'elle. Si la MAC du destinataire n'est pas déjà dans la table ARP, alors un échange ARP sera déclenché.
+Interface : 192.168.20.1 --- 0x4
+  Adresse Internet      Adresse physique      Type
+  224.0.0.22            01-00-5e-00-00-16     statique
+  239.255.255.250       01-00-5e-7f-ff-fa     statique
+
+Interface : 10.10.145.156 --- 0x6
+  Adresse Internet      Adresse physique      Type
+  10.10.128.1           28-de-65-73-6f-e6     dynamique
+  224.0.0.22            01-00-5e-00-00-16     statique
+  239.255.255.250       01-00-5e-7f-ff-fa     statique
+
+Interface : 192.168.56.1 --- 0xb
+  Adresse Internet      Adresse physique      Type
+  224.0.0.22            01-00-5e-00-00-16     statique
+  239.255.255.250       01-00-5e-7f-ff-fa     statique
+
+Interface : 192.168.100.1 --- 0x13
+  Adresse Internet      Adresse physique      Type
+  224.0.0.22            01-00-5e-00-00-16     statique
+  239.255.255.250       01-00-5e-7f-ff-fa     statique
+
+```
+
 
 🌞 Wireshark it
 
