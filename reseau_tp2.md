@@ -26,92 +26,63 @@ Interface : 10.10.10.2 --- 0x7
 
 
 🌞 Prouvez que la connexion est fonctionnelle entre les deux machines
-
 ```
-PS C:\Users\vince> ping 10.10.10.1
+a partir de maintenant j'utiliserai comme binome une VM qui comme ip: 10.3.1.11
+```
+```
+PS C:\WINDOWS\system32> ping 10.3.1.11
 
-Envoi d’une requête 'Ping'  10.10.10.1 avec 32 octets de données :
-Réponse de 10.10.10.1 : octets=32 temps=1 ms TTL=64
-Réponse de 10.10.10.1 : octets=32 temps=1 ms TTL=64
-Réponse de 10.10.10.1 : octets=32 temps=1 ms TTL=64
-Réponse de 10.10.10.1 : octets=32 temps=1 ms TTL=64
+Envoi d’une requête 'Ping'  10.3.1.11 avec 32 octets de données :
+Réponse de 10.3.1.11 : octets=32 temps<1ms TTL=128
+Réponse de 10.3.1.11 : octets=32 temps<1ms TTL=128
+Réponse de 10.3.1.11 : octets=32 temps<1ms TTL=128
+Réponse de 10.3.1.11 : octets=32 temps<1ms TTL=128
 
-Statistiques Ping pour 10.10.10.1:
+Statistiques Ping pour 10.3.1.11:
     Paquets : envoyés = 4, reçus = 4, perdus = 0 (perte 0%),
 Durée approximative des boucles en millisecondes :
-    Minimum = 1ms, Maximum = 1ms, Moyenne = 1ms
+    Minimum = 0ms, Maximum = 0ms, Moyenne = 0ms
 ```
 
 🌞 Wireshark it
-
-
-🦈 PCAP qui contient les paquets ICMP qui vous ont permis d'identifier les types ICMP (juste quelques-uns)
+```
+voir "wireshark 1 ping"
+j'ai ping mon pc depuis ma vm
+```
 
 II. ARP my bro
 
 🌞 Check the ARP table
+
 ```
 PS C:\Users\vince> arp -a
 
-Interface : 10.10.10.2 --- 0x7
-
+Interface : 10.3.1.11 --- 0x44
   Adresse Internet      Adresse physique      Type
-  10.10.10.1            08-bf-b8-c2-2a-57     dynamique
-  10.10.10.3            ff-ff-ff-ff-ff-ff     statique
-  10.10.10.12           08-bf-b8-c2-2a-57     dynamique
+  10.3.1.255            ff-ff-ff-ff-ff-ff     statique
   224.0.0.22            01-00-5e-00-00-16     statique
   224.0.0.251           01-00-5e-00-00-fb     statique
-  224.0.0.252           01-00-5e-00-00-fc     statique
   239.255.255.250       01-00-5e-7f-ff-fa     statique
 ```
 
-🌞 Manipuler la table ARP
+🌞 Manipuler la table ARP 
+```
+je n'ai plus mon binome je l'ai fais avec une vm
+```
 ```
 PS C:\WINDOWS\system32> arp -d
-La suppression de l'entrée ARP a échoué : Paramètre incorrect.
-
-PS C:\WINDOWS\system32> netsh interface ip delete arpcache
-Ok.
-
 PS C:\WINDOWS\system32> arp -a
 
-Interface : 192.168.20.1 --- 0x4
+Interface : 10.3.1.11 --- 0x44
   Adresse Internet      Adresse physique      Type
   224.0.0.22            01-00-5e-00-00-16     statique
-  239.255.255.250       01-00-5e-7f-ff-fa     statique
-
-Interface : 10.10.145.156 --- 0x6
-  Adresse Internet      Adresse physique      Type
-  10.10.128.1           28-de-65-73-6f-e6     dynamique
-  224.0.0.22            01-00-5e-00-00-16     statique
-  239.255.255.250       01-00-5e-7f-ff-fa     statique
-
-Interface : 192.168.56.1 --- 0xb
-  Adresse Internet      Adresse physique      Type
-  224.0.0.22            01-00-5e-00-00-16     statique
-  239.255.255.250       01-00-5e-7f-ff-fa     statique
-
-Interface : 192.168.100.1 --- 0x13
-  Adresse Internet      Adresse physique      Type
-  224.0.0.22            01-00-5e-00-00-16     statique
-  239.255.255.250       01-00-5e-7f-ff-fa     statique
 
 ```
 
 
 🌞 Wireshark it
 
-vous savez maintenant comment forcer un échange ARP : il sufit de vider la table ARP et tenter de contacter quelqu'un, l'échange ARP se fait automatiquement
-mettez en évidence les deux trames ARP échangées lorsque vous essayez de contacter quelqu'un pour la "première" fois
 
-déterminez, pour les deux trames, les adresses source et destination
-déterminez à quoi correspond chacune de ces adresses
-
-
-
-🦈 PCAP qui contient les DEUX trames ARP
-
-L'échange ARP est constitué de deux trames : un ARP broadcast et un ARP reply.
 
 
 III. DHCP
