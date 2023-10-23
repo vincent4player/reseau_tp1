@@ -82,7 +82,7 @@ Interface : 10.3.1.11 --- 0x44
 
 🌞 Wireshark it
 
-
+"voir wireshark 2 ping"
 
 
 III. DHCP
