@@ -52,6 +52,16 @@ Commande 2:[vincent@localhost ~]$ ip a
 
 2. Analyse de trames
 🌞Analyse de trames
+```
+sudo ip neigh flush all
+```
+```
+sudo tcpdump -i enp0s3 -c 10 -w tp3-arp.pcap not port 22
+```
+```
+scp vincent@10.3.1.11:/home/vince/tp3-arp.pcap ./
+```
+
 
 ```
 "voir tp3_arp.pcap"
@@ -63,95 +73,152 @@ Commande 2:[vincent@localhost ~]$ ip a
 
 
 
+II. Routage
+
+
+II. Routage
+
+1. Mise en place du routage
+2. Analyse de trames
+3. Accès internet
+
+
+
+Vous aurez besoin de 3 VMs pour cette partie. Réutilisez les deux VMs précédentes.
+
+
+
+Machine
+LAN 1 10.3.1.0/24
+
+LAN 2 10.3.2.0/24
+
+
+
+
+
+router
+10.3.1.254
+10.3.2.254
+
+
+john
+10.3.1.11
+no
+
+
+marcel
+no
+10.3.2.12
+
+
+
+
+Je les ai appelés marcel et john PASKON EN A MAR des noms nuls en réseau 🌻
+
+
+   john                router              marcel
+  ┌─────┐             ┌─────┐             ┌─────┐
+  │     │    ┌───┐    │     │    ┌───┐    │     │
+  │     ├────┤ho1├────┤     ├────┤ho2├────┤     │
+  └─────┘    └───┘    └─────┘    └───┘    └─────┘
+
+
+➜ AVANT de continuer, configurez correctement les IP sur les 3 VMs. Normalement :
+
+
+john peut ping router sur 10.3.1.254
+```
+[vincent@localhost ~]$ ping 10.3.1.254
+PING 10.3.1.254 (10.3.1.254) 56(84) bytes of data.
+64 bytes from 10.3.1.254: icmp_seq=1 ttl=64 time=0.520 ms
+64 bytes from 10.3.1.254: icmp_seq=2 ttl=64 time=0.427 ms
+64 bytes from 10.3.1.254: icmp_seq=3 ttl=64 time=0.320 ms
+^C
+--- 10.3.1.254 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2030ms
+rtt min/avg/max/mdev = 0.320/0.422/0.520/0.081 ms
+```
+marcel peut ping router sur 10.3.2.254
+```
+[vincent@localhost ~]$ ping 10.3.2.254
+PING 10.3.2.254 (10.3.2.254) 56(84) bytes of data.
+64 bytes from 10.3.2.254: icmp_seq=1 ttl=64 time=0.394 ms
+64 bytes from 10.3.2.254: icmp_seq=2 ttl=64 time=0.364 ms
+^C
+--- 10.3.2.254 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1054ms
+rtt min/avg/max/mdev = 0.364/0.379/0.394/0.015 ms
+```
+
+
+1. Mise en place du routage
+➜ Activer le routage sur le noeud router
+
+Cette étape est nécessaire car Rocky Linux c'est pas un OS dédié au routage par défaut. Ce n'est bien évidemment une opération qui n'est pas nécessaire sur un équipement routeur dédié comme un routeur Cisco.
+
+
+# pour autoriser une machine Linux à traiter des paquets IP qui ne lui sont pas destinés
+# autrement dit "activer le routage"
+$ sudo sysctl -w net.ipv4.ip_forward=1
+
+
 🌞Ajouter les routes statiques nécessaires pour que john et marcel puissent se ping
 
-voir le mémo Rocky pour ça
-il faut taper une commande ip route add
+```
+john
 
-il faut ajouter une seule route des deux côtés
-une fois les routes en place, vérifiez avec un ping que les deux machines peuvent se joindre (john et marcel)
+[vincent@localhost ~]$ sudo ip route add 10.3.2.0/24 via 10.3.1.254 dev enp0s3
+[vincent@localhost ~]$ ip r s
+10.3.1.0/24 dev enp0s3 proto kernel scope link src 10.3.1.11 metric 100
+10.3.2.0/24 via 10.3.1.254 dev enp0s3
+[vincent@localhost ~]$ ping 10.3.2.12
+PING 10.3.2.12 (10.3.2.12) 56(84) bytes of data.
+64 bytes from 10.3.2.12: icmp_seq=1 ttl=63 time=0.545 ms
+64 bytes from 10.3.2.12: icmp_seq=2 ttl=63 time=0.795 ms
+64 bytes from 10.3.2.12: icmp_seq=3 ttl=63 time=0.593 ms
+^C
+--- 10.3.2.12 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2035ms
+rtt min/avg/max/mdev = 0.545/0.644/0.795/0.108 ms
+```
+```
+Marcel
 
-Par exemple, la route de john pour joindre le réseau LAN2 de marcel, elle va ressembler à :
-
-# 10.2.2.0/24 est l'adresse du réseau que john ne connaît pas
-# 10.2.1.254 est l'adresse de la passerelle qu'il peut déjà joindre : votre router
-10.2.2.0/24 via 10.2.1.254 dev enp0s3
-
+[vincent@localhost ~]$ sudo ip route add 10.3.1.0/24 via 10.3.2.254 dev enp0s3
+[vincent@localhost ~]$ ip r s
+10.3.1.0/24 via 10.3.2.254 dev enp0s3
+10.3.2.0/24 dev enp0s3 proto kernel scope link src 10.3.2.12 metric 100
+[vincent@localhost ~]$ ping 10.3.2.254
+PING 10.3.2.254 (10.3.2.254) 56(84) bytes of data.
+64 bytes from 10.3.2.254: icmp_seq=1 ttl=64 time=0.314 ms
+64 bytes from 10.3.2.254: icmp_seq=2 ttl=64 time=0.424 ms
+^C
+--- 10.3.2.254 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1055ms
+rtt min/avg/max/mdev = 0.314/0.369/0.424/0.055 ms
+```
 
 
 
 2. Analyse de trames
 🌞Analyse des échanges ARP
 
-videz les tables ARP des trois noeuds
-effectuez un ping de john vers marcel
+```
+sudo ip neigh flush all
+```
 
-essayez de déduire les échanges ARP qui ont eu lieu
-
-en regardant les tables ARP des 3 machines
-en lançant tcpdump pour capturer le trafic et l'analyser
-
-
-
-écrivez, dans l'ordre, les échanges ARP qui ont eu lieu, puis le ping et le pong, je veux TOUTES les trames utiles pour l'échange (ARP et ping/pong)
-
-Par exemple (copiez-collez ce tableau ce sera le plus simple) :
-
-
-
-ordre
-type trame
-IP source
-MAC source
-IP destination
-MAC destination
+```
+| ordre | type trame  | IP source | MAC source                | IP destination | MAC destination            |
+| ----- | ----------- | --------- | ------------------------- | -------------- | -------------------------- |
+| 1     | Requête ARP | x         |`marcel` `08:00:27:55:3c:64`| x             | Broadcast `FF:FF:FF:FF:FF` |
+| 2     | Réponse ARP | x         |`john` ` 08:00:27:c5:08:3e` | x              |`marcel` `08:00:27:55:3c:64`|
+| ...   | ...         | ...       |...                        |                |                            |
+| 3     | Ping        | 10.3.2.12 |`marcel` `08:00:27:55:3c:64`| 10.3.1.11     |`john` ` 08:00:27:c5:08:3e`  |
+| 4     | Pong        | 10.3.1.11 |`john` ` 08:00:27:c5:08:3e` | 10.3.2.12      |`marcel` `08:00:27:55:3c:64`|
+```
 
 
-
-
-1
-Requête ARP
-x
-
-marcel AA:BB:CC:DD:EE
-
-x
-Broadcast FF:FF:FF:FF:FF
-
-
-
-2
-Réponse ARP
-x
-?
-x
-
-marcel AA:BB:CC:DD:EE
-
-
-
-...
-...
-...
-...
-
-
-
-
-?
-Ping
-?
-?
-?
-?
-
-
-?
-Pong
-?
-?
-?
-?
 
 
 
