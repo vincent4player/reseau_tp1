@@ -247,70 +247,18 @@ success
 
 🌞Donnez un accès internet à vos machines - config clients
 
-ajoutez une route par défaut à john et marcel (voir le mémo Rocky)
 
-vérifiez que vous avez accès internet avec un ping
-
-le ping doit être vers une IP, PAS un nom de domaine
-
-
-donnez leur aussi l'adresse d'un serveur DNS qu'ils peuvent utiliser (voir mémo Rocky)
-
-
-ping vers un nom de domaine pour vérifier la résolution de nom
 
 
 
 🌞Analyse de trames
 
-effectuez un ping depuis john vers marcel
-
-capturez le ping depuis router avec tcpdump
-
-faites deux captures : une sur chaque interface du routeur (celle qui est dans le LAN1 et celle qui est dans le LAN2)
-
-
-analysez un ping aller et le retour qui correspond et mettez dans un tableau :
-
-
-
-
-ordre
-type trame
-IP source
-MAC source
-IP destination
-MAC destination
-
-
-
-
-
-1
-ping
-
-marcel 10.3.1.12
-
-
-marcel AA:BB:CC:DD:EE
-
-8.8.8.8
-?
-
-
-
-2
-pong
-...
-...
-...
-...
-...
-
-
-
-
-Avec les deux captures vous devez observer 4 trames pour chaque ping échangé : 1) trame ping entre john et router (capture1) 2) trame ping entre router et marcel (capture2) 3) trame pong entre marcel et router (capture1) 4) trame pong entre router et john (capture2)
+| ordre | type trame  | IP source           | MAC source                   | IP destination      | MAC destination              |
+| ----- | ----------- | ------------------- | ---------------------------- | ------------------- | ---------------------------- |
+| 1     | Ping        | `john` `10.3.1.11`  | `john` `08:00:27:c5:08:3e`   | `marcel` `10.3.2.12`| `routeur` `08:00:27:ba:46:1e`|
+| 2     | Ping        | `john` `10.3.1.11`  | `routeur` `08:00:27:22:7d:f6`| `marcel` `10.3.2.12`| `marcel` `08:00:27:55:3c:64` |
+| 3     | Pong        | `marcel` `10.3.2.12`| `marcel` `08:00:27:55:3c:64` | `john` `10.3.1.11`  | `routeur` `08:00:27:22:7d:f6`|
+| 4     | Pong        | `marcel` `10.3.2.12`| `routeur` `08:00:27:ba:46:1e`| `john` `10.3.1.11`  | `john` `08:00:27:42:4a:8f`   |
 
 🦈 Capture réseau tp3_routage_lan1.pcapng
 🦈 Capture réseau tp3_routage_lan2.pcapng
