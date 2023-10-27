@@ -226,15 +226,23 @@ sudo ip neigh flush all
 3. Accès internet
 🌞Donnez un accès internet à vos machines - config routeur
 
-ajoutez une carte NAT (dans l'interface de Virtualbox) en 3ème inteface sur le router pour qu'il ait un accès internet
-une fois que c'est fait, vérifiez qu'il a bien un accès internet
-sous Rocky...
+```
+[vincent@localhost ~]$ ping 8.8.8.8
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=114 time=16.8 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=114 time=16.5 ms
+^C
+--- 8.8.8.8 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1003ms
+rtt min/avg/max/mdev = 16.530/16.675/16.820/0.145 ms
+```
 
-pour autoriser le routeur à router des paquets vers internet, et faire ça propre, ça nécessite quelques manips
-pour qu'il agisse comme un routeur normal quoi
-référez-vous au mémo Rocky
-
-
+```
+[vincent@localhost ~]$ sudo firewall-cmd --add-masquerade --permanent
+success
+[vincent@localhost ~]$ sudo firewall-cmd --reload
+success
+```
 
 
 🌞Donnez un accès internet à vos machines - config clients
