@@ -302,7 +302,7 @@ lease 10.4.1.137 {
 
 
 ```
-[slayz@dhcp etc]$ sudo cat dhcp/dhcpd.conf
+[vincent@dhcp etc]$ sudo cat dhcp/dhcpd.conf
 # create new
 # nom de domaine
 option domain-name     "srv.world";
