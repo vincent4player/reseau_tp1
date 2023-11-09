@@ -358,9 +358,9 @@ default via 10.4.1.254 dev enp0s3 proto dhcp metric 100
 ```
 La durée de votre bail DHCP est bien de 6 heures:
 
-[slayz@node1 dhclient]$ cd var/lib/dhclient
+[vincent@node1 dhclient]$ cd var/lib/dhclient
 
-[slayz@node1 dhclient]$ cat dhclient.leases
+[vincent@node1 dhclient]$ cat dhclient.leases
 lease {
   interface "enp0s3";
   fixed-address 10.4.1.138;
