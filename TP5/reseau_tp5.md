@@ -210,16 +210,19 @@ un p'tit <h1>MEOW</h1> ça suffit hein
 
 🌞 Donner les bonnes permissions
 
+```
 [vincent@web site_web_nul]$ sudo chown -R nginx:nginx /var/www/site_web_nul
 [vincent@web site_web_nul]$ ls -l
 total 4
 -rw-r--r--. 1 nginx nginx 14 Nov 14 11:31 index.html
-
+```
 🌞 Créer un fichier de configuration NGINX pour notre site web
 
+```
 [vincent@web ~]$ cd /etc/nginx/conf.d/
 [vincent@web conf.d]$ sudo touch site_web_nul.conf
 [vincent@web conf.d]$ sudo nano site_web_nul.conf
+
 
 server {
   # le port sur lequel on veut écouter
@@ -234,7 +237,7 @@ server {
   # le dossier qui contient notre site web
   root /var/www/site_web_nul;
 }
-
+```
 
 🌞 Démarrer le serveur web !
 
