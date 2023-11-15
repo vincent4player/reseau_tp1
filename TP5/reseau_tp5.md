@@ -192,7 +192,7 @@ quand on héberge des sites web sur un serveur Linux, il existe un dossier qu'on
 ce dossier c'est /var/www/
 créer donc un dossier /var/www/site_web_nul/
 créer un fichier /var/www/site_web_nul/index.html qui contient un code HTML simpliste de votre choix
-un p'tit <h1>MEOW</h1> ça suffit hein
+
 
 ```
 [vincent@web ~]$ cd /var/
