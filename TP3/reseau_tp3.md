@@ -247,8 +247,47 @@ success
 
 🌞Donnez un accès internet à vos machines - config clients
 
+ajoutez une route par défaut à john et marcel
 
 
+john :
+```
+sudo nano /etc/sysconfig/network
+GATEWAY=10.3.1.254
+```
+marcel :
+```
+sudo nano /etc/sysconfig/network
+GATEWAY=10.3.2.254
+```
+
+donnez leur aussi l'adresse d'un serveur DNS qu'ils peuvent utiliser
+
+john :
+ ``` 
+sudo nano /etc/sysconfig/network-scripts/ifcfg-enp0s3
+
+DEVICE=enp0s3
+
+BOOTPROTO=static
+ONBOOT=yes
+
+IPADDR=10.3.1.11
+NETMASK=255.255.255.0
+DNS1=1.1.1.1
+
+sudo systemctl restart NetworkManager
+
+[vincent@localhost ~]$ ping google.com
+PING google.com (142.250.179.78) 56(84) bytes of data.
+64 bytes from par21s19-in-f14.1e100.net (142.250.179.78): icmp_seq=1 ttl=118 time=13.7 ms
+64 bytes from par21s19-in-f14.1e100.net (142.250.179.78): icmp_seq=2 ttl=118 time=16.9 ms
+64 bytes from par21s19-in-f14.1e100.net (142.250.179.78): icmp_seq=3 ttl=118 time=14.0 ms
+
+--- google.com ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2002ms
+rtt min/avg/max/mdev = 13.745/14.884/16.892/1.423 ms
+```
 
 
 🌞Analyse de trames
