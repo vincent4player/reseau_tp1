@@ -246,13 +246,14 @@ Address:  10.6.1.101
 
 Nom :    john.tp6.b1
 ```
+```
+voir tp6_dns.pcap
+```
+
 III. Serveur DHCP
 
 
 🖥️ Machine dhcp.tp6.b1
-
-déroulez la checklisteuh
-indiquez votre propre serveur DNS pour la résolution de noms
 
 🌞 Installer un serveur DHCP
 
@@ -333,4 +334,8 @@ rtt min/avg/max/mdev = 15.918/17.317/18.717/1.679 ms
 <hr>
 <address>Apache/2.4.41 (Ubuntu) Server at ynov.com Port 80</address>
 </body></html>
+```
+
+```
+voir tp6_web.pcap
 ```
