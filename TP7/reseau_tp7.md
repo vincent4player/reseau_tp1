@@ -180,39 +180,46 @@ Last login: Fri Nov 24 09:26:49 2023 from 10.7.1.1
 
 🌞 Montrer sur quel port est disponible le serveur web
 
-avec une commande ss sur la machine web.tp7.b1
-
+```
+[vincent@web ~]$ sudo ss -l -t -n
+State      Recv-Q     Send-Q           Local Address:Port           Peer Address:Port     Process
+LISTEN     0          511                    0.0.0.0:80                  0.0.0.0:*
+LISTEN     0          128                    0.0.0.0:22                  0.0.0.0:*
+LISTEN     0          511                       [::]:80                     [::]:*
+LISTEN     0          128                       [::]:22                     [::]:*
+```
 
 
 1. Setup HTTPS
-Pour avoir un beau cadenas vert à côté de la barre d'URL dans le navigateur, il faut avoir une IP publique, un nom de domaine public etc, et this costs money sir.
-Dans notre lab ici, on va fabriquer un certificat "auto-signé". La connexion sera chiffrée, mais cadenas rouge. Sécurisé si vous pouvez attester vous-mêmes de la validité du certificat.
+
 
 🌞 Générer une clé et un certificat sur web.tp7.b1
 
-# génération de la clé et du certificat
-$ openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout server.key -out server.crt
-
-# on déplace la clé dans un répertoire standard pour les clés
-# et on la renomme au passage
-$ sudo mv server.key /etc/pki/tls/private/web.tp7.b1.key
-
-# pareil pour le cert
-$ sudo mv server.crt /etc/pki/tls/certs/web.tp7.b1.crt
-
-# on définit des permissions restrictives sur les deux fichiers
-$ sudo chown nginx:nginx /etc/pki/tls/private/web.tp7.b1.key
-$ sudo chown nginx:nginx /etc/pki/tls/certs/web.tp7.b1.crt
-$ sudo chmod 0400 /etc/pki/tls/private/web.tp7.b1.key
-$ sudo chmod 0444 /etc/pki/tls/certs/web.tp7.b1.crt
-
+```
+[vincent@web ~]$ openssl req -new -newkey rsa:2048 -days 365 -nodes -x509 -keyout server.key -out server.crt
+.+.+........+.........+......................+...+...+..+.......+...+......+.....+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.......+.......+..+....+.....+............+...+......+...+.......+......+...+..+......................+..+....+......+...........+.......+.....+.+......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+......+.....+.+...+...........+...+.......+.........+.....+......+...+.+......+..............+.+..............+......+.+..+.............+........+....+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*..+........+...+.......+...+......+......+..+............+...+......+..........+..+...+............+....+.........+..+...+.........+.+..+....+...+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*.+.+.........+..+.........+.+..+.......+...+...+........+....+..+.+.................+.......+......+.....+....+........+.+......+......+............+..+.........+.+...+...+...+..+.......+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [XX]:fr
+State or Province Name (full name) []:Nouvelle aquitaine
+Locality Name (eg, city) [Default City]:bordeaux
+Organization Name (eg, company) [Default Company Ltd]:
+Organizational Unit Name (eg, section) []:
+Common Name (eg, your name or your server's hostname) []:
+Email Address []:
+```
 
 🌞 Modification de la conf de NGINX
 
-je vous montre le fichier avec cat, éditez-le avec nano de votre côté
-
-
-[it4@web ~]$ sudo cat /etc/nginx/conf.d/site_web_nul.conf
+```
+[vincent@web ~]$ sudo cat /etc/nginx/conf.d/site_web_nul.conf
 server {
     # on change la ligne listen
     listen 10.7.1.12:443 ssl;
@@ -224,29 +231,33 @@ server {
     server_name www.site_web_nul.b1;
     root /var/www/site_web_nul;
 }
-
+```
 
 🌞 Conf firewall
 
-ouvrez le port 443/tcp dans le firewall de web.tp7.b1
-
+```
+[vincent@web ~]$ sudo firewall-cmd --add-port=443/tcp --permanent
+success
+[vincent@web ~]$ sudo firewall-cmd --reload
+success
+```
 
 🌞 Redémarrez NGINX
 
-avec un sudo systemctl restart nginx
-
+```
+[vincent@web ~]$ sudo systemctl restart nginx
+```
 
 🌞 Prouvez que NGINX écoute sur le port 443/tcp
 
-avec une commande ss
-
+```
+[vincent@web ~]$ sudo ss -tnl | grep 443
+LISTEN 0      511        10.7.1.12:443       0.0.0.0:*
+```
 
 🌞 Visitez le site web en https
 
-avec un curl depuis john.tp7.b1
-
-il faudra ajouter l'option -k pour que ça marche : curl -k https://10.7.1.12
-
-
-
-et testez avec votre navigateur aussi, histoire de !
+```
+[vincent@web ~]$ curl -k https://10.7.1.12
+<h1>MEOW</h1>
+```
